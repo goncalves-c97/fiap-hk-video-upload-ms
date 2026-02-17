@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-upload-ms-webapi-service
+  namespace: video-upload-ms
+spec:
+  type: LoadBalancer
+  selector:
+    app: video-upload-ms-webapi
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 5000
