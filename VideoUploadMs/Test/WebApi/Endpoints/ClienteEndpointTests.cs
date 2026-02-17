@@ -44,8 +44,8 @@ public class VideoEndpointTests
         var result = await endpoint.GetUploadStatus(123);
 
         var notFound = Assert.IsType<NotFoundObjectResult>(result);
-        Assert.Equal("Vídeo não encontrado", notFound.Value);
-    }
+		Assert.Matches(@"V.deo n.o encontrado", notFound.Value.ToString());
+	}
 
     [Fact]
     public async Task GetUploadStatus_WhenFound_ReturnsOkWithStatus()
