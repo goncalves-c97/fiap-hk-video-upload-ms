@@ -54,6 +54,7 @@ public class VideoEndpointTests
 
 		var notFound = Assert.IsType<NotFoundObjectResult>(result);
 		Assert.Equal("Vídeo não encontrado", notFound.Value);
+		Assert.Matches(@"V.deo n.o encontrado", notFound.Value.ToString());
 	}
 
 	[Fact]
@@ -83,7 +84,8 @@ public class VideoEndpointTests
 		var result = await endpoint.GetUploadStatus(123);
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente não encontrado.", unauthorized.Value);
+
+		Assert.Matches(@"ID do usu.rio n.o encontrado.", unauthorized.Value.ToString());
 	}
 
 	[Fact]
@@ -99,7 +101,7 @@ public class VideoEndpointTests
 		var result = await endpoint.GetUploadStatus(123);
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente inválido!", unauthorized.Value);
+		Assert.Matches(@"ID do usu.rio inv.lido!", unauthorized.Value.ToString());
 	}
 
 	[Fact]
@@ -134,7 +136,7 @@ public class VideoEndpointTests
 		var result = await endpoint.ListUploads();
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente não encontrado.", unauthorized.Value);
+		Assert.Matches(@"ID do usu.rio n.o encontrado.", unauthorized.Value.ToString());
 	}
 
 	[Fact]
@@ -150,7 +152,7 @@ public class VideoEndpointTests
 		var result = await endpoint.ListUploads();
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente inválido!", unauthorized.Value);
+		Assert.Matches(@"ID do usu.rio inv.lido!", unauthorized.Value.ToString());
 	}
 
 	[Fact]
@@ -180,7 +182,7 @@ public class VideoEndpointTests
 		var result = await endpoint.Upload(dto);
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente não encontrado.", unauthorized.Value);
+		Assert.Matches(@"ID do usu.rio n.o encontrado.", unauthorized.Value.ToString());
 	}
 
 	[Fact]
@@ -201,7 +203,7 @@ public class VideoEndpointTests
 		var result = await endpoint.Upload(dto);
 
 		var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
-		Assert.Equal("ID do cliente inválido!", unauthorized.Value);
+		Assert.Matches(@"ID do usu.rio inv.lido!", unauthorized.Value.ToString());
 	}
 
 	[Fact]

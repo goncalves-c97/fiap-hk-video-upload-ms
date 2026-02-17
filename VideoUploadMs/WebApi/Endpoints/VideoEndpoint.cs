@@ -48,10 +48,10 @@ namespace WebApi.Endpoints
             string? idUsuarioString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (idUsuarioString == null)
-                return Unauthorized("ID do cliente não encontrado.");
+                return Unauthorized("ID do usuário não encontrado.");
 
             if (!int.TryParse(idUsuarioString, out int idUsuario))
-                return Unauthorized("ID do cliente inválido!");
+                return Unauthorized("ID do usuário inválido!");
 
             VideoUpload videoUpload = await VideosController.UploadVideo(_dbConnection, _objectStorageService, _eventBus, idUsuario, uploadVideoRequestDto);
 
@@ -64,10 +64,10 @@ namespace WebApi.Endpoints
             string? idUsuarioString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (idUsuarioString == null)
-                return Unauthorized("ID do cliente não encontrado.");
+                return Unauthorized("ID do usuário não encontrado.");
 
             if (!int.TryParse(idUsuarioString, out int idUsuario))
-                return Unauthorized("ID do cliente inválido!");
+                return Unauthorized("ID do usuário inválido!");
 
             return Ok(await VideosController.GetAll(_dbConnection, idUsuario));
         }
@@ -78,10 +78,10 @@ namespace WebApi.Endpoints
             string? idUsuarioString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (idUsuarioString == null)
-                return Unauthorized("ID do cliente não encontrado.");
+                return Unauthorized("ID do usuário não encontrado.");
 
             if (!int.TryParse(idUsuarioString, out int idUsuario))
-                return Unauthorized("ID do cliente inválido!");
+                return Unauthorized("ID do usuário inválido!");
 
             VideoUpload? videoUpload = await VideosController.GetById(_dbConnection, idVideo, idUsuario);
 
