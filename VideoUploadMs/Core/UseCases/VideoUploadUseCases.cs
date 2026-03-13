@@ -5,6 +5,7 @@ using Core.Factories;
 using Core.Gateways;
 using Core.Interfaces;
 using Core.Interfaces.Gateways;
+using Core.Mappers;
 
 namespace Core.UseCases
 {
@@ -42,6 +43,12 @@ namespace Core.UseCases
         public static async Task<IEnumerable<VideoUpload>> GetAllVideoUploads(IVideoUploadGateway videoUploadGateway, int idUsuario)
         {
             return await videoUploadGateway.GetAll(idUsuario);
+        }
+
+        public static async Task<IEnumerable<VideoStatusDto>> GetAllVideoStatus(IVideoUploadGateway videoUploadGateway, int idUsuario)
+        {
+            IEnumerable<VideoUpload> userVideos = await videoUploadGateway.GetAll(idUsuario);
+            return VideoStatusDtoMapper.Map(userVideos);
         }
 
         public static async Task DeleteAll(IVideoUploadGateway videoUploadGateway, int idUsuario)
