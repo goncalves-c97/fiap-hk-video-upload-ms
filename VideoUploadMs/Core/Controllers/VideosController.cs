@@ -9,10 +9,10 @@ namespace Core.Controllers
     public static class VideosController
     {
 
-        public static async Task<VideoUpload> UploadVideo(IDbConnection dbConnection, IObjectStorageService objectStorageService, IMessagingService eventBus, int idUsuario, UploadVideoRequestDto clienteDto)
+        public static async Task<VideoUpload> UploadVideo(IDbConnection dbConnection, IObjectStorageService objectStorageService, IMessagingService eventBus, int idUsuario, string emailUsuario, UploadVideoRequestDto clienteDto)
         {
             VideoUploadGateway gateway = new(dbConnection);
-            VideoUpload videoUpload = await VideoUploadUseCases.UploadVideo(gateway, objectStorageService, eventBus, idUsuario, clienteDto);
+            VideoUpload videoUpload = await VideoUploadUseCases.UploadVideo(gateway, objectStorageService, eventBus, idUsuario, emailUsuario, clienteDto);
             return videoUpload;
         }
 

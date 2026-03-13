@@ -16,6 +16,7 @@ namespace Core.Factories
             return new VideoUpload
             {
                 IdUsuario = videoUploadDto.IdUsuario,
+                EmailUsuario = videoUploadDto.EmailUsuario,
                 NomeArquivoOriginal = videoUploadDto.NomeArquivoOriginal,
                 CaminhoStorageOriginal = videoUploadDto.CaminhoStorageOriginal,
                 TamanhoBytes = videoUploadDto.TamanhoBytes,

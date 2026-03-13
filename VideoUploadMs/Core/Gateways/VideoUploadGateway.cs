@@ -26,6 +26,7 @@ namespace Core.Gateways
             {
                 { "guid", videoUpload.Guid },
                 { "id_usuario", videoUpload.IdUsuario },
+                { "email_usuario", videoUpload.EmailUsuario },
                 { "nome_arquivo_original", videoUpload.NomeArquivoOriginal },
                 { "caminho_storage_original", videoUpload.CaminhoStorageOriginal },
                 { "caminho_zip_processado", videoUpload.CaminhoZipProcessado },

@@ -53,7 +53,12 @@ namespace WebApi.Endpoints
             if (!int.TryParse(idUsuarioString, out int idUsuario))
                 return Unauthorized("ID do usuário inválido!");
 
-            VideoUpload videoUpload = await VideosController.UploadVideo(_dbConnection, _objectStorageService, _eventBus, idUsuario, uploadVideoRequestDto);
+            string? emailUsuario = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (emailUsuario == null)
+                return Unauthorized("Email do usuário não encontrado.");
+
+            VideoUpload videoUpload = await VideosController.UploadVideo(_dbConnection, _objectStorageService, _eventBus, idUsuario, emailUsuario, uploadVideoRequestDto);
 
             return Ok(videoUpload);
         }

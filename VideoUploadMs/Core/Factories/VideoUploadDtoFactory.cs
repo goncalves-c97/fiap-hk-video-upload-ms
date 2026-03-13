@@ -9,11 +9,12 @@ namespace Core.Factories
 {
     public static class VideoUploadDtoFactory
     {
-        public static VideoUploadDto Create(int userId, UploadVideoRequestDto request, string storageKey)
+        public static VideoUploadDto Create(int userId, string emailUsuario, UploadVideoRequestDto request, string storageKey)
         {
             return new VideoUploadDto
             {
                 IdUsuario = userId,
+                EmailUsuario = emailUsuario,
                 NomeArquivoOriginal = request.Arquivo.FileName,
                 CaminhoStorageOriginal = storageKey,
                 TamanhoBytes = request.Arquivo.Length,

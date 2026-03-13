@@ -11,6 +11,8 @@ namespace Core.Entities
 
         public int IdUsuario { get; set; }
 
+        public string EmailUsuario { get; set; }
+
         public string NomeArquivoOriginal { get; set; }
 
         public string CaminhoStorageOriginal { get; set; }
