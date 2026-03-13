@@ -1,44 +1,36 @@
 ﻿using Core.Dtos;
 using Core.Entities;
-using Core.Enums;
 using Core.Events;
 using Core.Factories;
 using Core.Gateways;
-using Core.Helpers;
 using Core.Interfaces;
 using Core.Interfaces.Gateways;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Sockets;
-using System.Security.Claims;
-using System.Text;
 
 namespace Core.UseCases
 {
     public static class VideoUploadUseCases
     {
-        private static int GetUserIdFromToken(string secret)
-        {
-            int userId = JwtReaderHelperClass.GetClaimValue(secret, ClaimTypes.NameIdentifier) != null ? int.Parse(JwtReaderHelperClass.GetClaimValue(secret, ClaimTypes.NameIdentifier)!) : throw new ArgumentException("Token JWT inválido: claim 'NameIdentifier' não encontrado!");
-            return userId;
-        }
-
-        public static async Task<VideoUpload> UploadVideo(IVideoUploadGateway videoUploadGateway, IObjectStorageService objectStorageService, IMessagingService eventBus, int idUsuario, UploadVideoRequestDto uploadVideoRequestDto)
+        public static async Task<VideoUpload> UploadVideo(IVideoUploadGateway videoUploadGateway, IObjectStorageService objectStorageService, IMessagingService eventBus, int idUsuario, string emailUsuario, UploadVideoRequestDto uploadVideoRequestDto)
         {
            if(idUsuario == 0)
                 throw new ArgumentException("idUsuario não informado ou inválido!");
 
-            VideoUploadDto videoUploadDto = VideoUploadDtoFactory.Create(idUsuario, uploadVideoRequestDto, "video_upload");
+           if(string.IsNullOrEmpty(emailUsuario))
+                throw new ArgumentException("emailUsuario não informado!");
+
+            VideoUploadDto videoUploadDto = VideoUploadDtoFactory.Create(idUsuario, emailUsuario, uploadVideoRequestDto, "video_upload");
 
             VideoUpload videoUpload = VideoUploadFactory.Create(videoUploadDto);
 
-            await objectStorageService.UploadAsync(uploadVideoRequestDto.Arquivo.OpenReadStream(), videoUpload.CaminhoStorageOriginal, videoUpload.TipoMime);
+            string key = await objectStorageService.UploadAsync(uploadVideoRequestDto.Arquivo.OpenReadStream(), videoUpload.CaminhoStorageOriginal, videoUpload.TipoMime);
             
             VideoUploadedEvent videoUploadedEvent = new VideoUploadedEvent
             {
                 VideoId = videoUpload.Guid,
                 UserId = videoUpload.IdUsuario,
-                StoragePath = videoUpload.CaminhoStorageOriginal,
+                UserEmail = videoUpload.EmailUsuario,
+                OriginalVideoName = videoUpload.NomeArquivoOriginal,
+                StoragePath = key,
                 UploadedAt = videoUpload.DataHoraUpload
             };
 
