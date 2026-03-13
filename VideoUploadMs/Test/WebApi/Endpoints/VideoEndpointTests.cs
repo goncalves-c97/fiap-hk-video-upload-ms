@@ -155,6 +155,65 @@ public class VideoEndpointTests
     }
 
     [Fact]
+    public async Task ListVideosStatus_ReturnsOkWithMappedStatuses()
+    {
+        var guid = Guid.NewGuid();
+        var db = new FakeDbConnection
+        {
+            SearchByParametersHandler = (_, __) => new object[]
+            {
+                new VideoUpload
+                {
+                    IdVideo = 1,
+                    IdUsuario = 123,
+                    Guid = guid,
+                    NomeArquivoOriginal = "video.mp4",
+                    Status = StatusVideoEnum.Processing
+                }
+            }
+        };
+        var endpoint = CreateEndpoint(db);
+
+        var result = await endpoint.ListVideosStatus();
+
+        var ok = Assert.IsType<OkObjectResult>(result);
+        var statuses = Assert.IsAssignableFrom<IEnumerable<VideoStatusDto>>(ok.Value).ToList();
+        var status = Assert.Single(statuses);
+        Assert.Equal(guid, status.Guid);
+        Assert.Equal("video.mp4", status.NomeArquivoOriginal);
+        Assert.Equal("Processing", status.Status);
+    }
+
+    [Fact]
+    public async Task ListVideosStatus_WhenMissingUserIdClaim_ReturnsUnauthorized()
+    {
+        var db = new FakeDbConnection();
+        var user = new ClaimsPrincipal(new ClaimsIdentity(Array.Empty<Claim>(), "TestAuth"));
+        var endpoint = CreateEndpoint(db, user);
+
+        var result = await endpoint.ListVideosStatus();
+
+        var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+        Assert.Matches(@"ID do usu.rio n.o encontrado.", unauthorized.Value.ToString());
+    }
+
+    [Fact]
+    public async Task ListVideosStatus_WhenInvalidUserIdClaim_ReturnsUnauthorized()
+    {
+        var db = new FakeDbConnection();
+        var user = new ClaimsPrincipal(new ClaimsIdentity(new[]
+        {
+ new Claim(ClaimTypes.NameIdentifier, "invalid-user")
+ }, "TestAuth"));
+        var endpoint = CreateEndpoint(db, user);
+
+        var result = await endpoint.ListVideosStatus();
+
+        var unauthorized = Assert.IsType<UnauthorizedObjectResult>(result);
+        Assert.Matches(@"ID do usu.rio inv.lido!", unauthorized.Value.ToString());
+    }
+
+    [Fact]
     public async Task Upload_WhenNoFile_ReturnsBadRequest()
     {
         var db = new FakeDbConnection();
