@@ -23,6 +23,13 @@ namespace Core.Controllers
             return clientes;
         }
 
+        public static async Task<IEnumerable<VideoStatusDto>> GetAllVideoStatus(IDbConnection dbConnection, int idUsuario)
+        {
+            VideoUploadGateway gateway = new(dbConnection);
+            IEnumerable<VideoStatusDto> videoStatus = await VideoUploadUseCases.GetAllVideoStatus(gateway, idUsuario);
+            return videoStatus;
+        }
+
         public static async Task DeleteAll(IDbConnection dbConnection, int idUsuario)
         {
             VideoUploadGateway gateway = new(dbConnection);

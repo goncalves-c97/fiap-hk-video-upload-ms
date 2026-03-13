@@ -77,6 +77,20 @@ namespace WebApi.Endpoints
             return Ok(await VideosController.GetAll(_dbConnection, idUsuario));
         }
 
+        [HttpGet, Route("ListVideosStatus")]
+        public async Task<IActionResult> ListVideosStatus()
+        {
+            string? idUsuarioString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (idUsuarioString == null)
+                return Unauthorized("ID do usuário não encontrado.");
+
+            if (!int.TryParse(idUsuarioString, out int idUsuario))
+                return Unauthorized("ID do usuário inválido!");
+
+            return Ok(await VideosController.GetAllVideoStatus(_dbConnection, idUsuario));
+        }
+
         [HttpGet, Route("GetUploadStatus")]
         public async Task<IActionResult> GetUploadStatus(int idVideo)
         {
